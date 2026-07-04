@@ -1,0 +1,117 @@
+:root {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color-scheme: light dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  width: 320px;
+}
+
+#app {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+h1 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.25);
+}
+.section:last-of-type {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.muted {
+  color: #888;
+  font-size: 12px;
+}
+
+.status-line {
+  font-size: 13px;
+}
+
+.status-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+.status-dot.connected { background: #34c759; }
+.status-dot.disconnected { background: #999; }
+.status-dot.reconnect { background: #ff9f0a; }
+
+button {
+  border-radius: 6px;
+  border: 1px solid rgba(128, 128, 128, 0.35);
+  padding: 6px 12px;
+  font-size: 13px;
+  font-family: inherit;
+  background: transparent;
+  cursor: pointer;
+}
+button.primary {
+  background: #4c8bf5;
+  color: #fff;
+  border-color: transparent;
+}
+button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.code-card {
+  background: rgba(128, 128, 128, 0.1);
+  border-radius: 8px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.code-value {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+}
+
+.error {
+  color: #ff453a;
+  font-size: 12px;
+}
+
+footer {
+  font-size: 11px;
+  color: #888;
+  display: flex;
+  justify-content: space-between;
+}

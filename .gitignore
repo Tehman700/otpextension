@@ -1,0 +1,6 @@
+# Claude Code local settings (not meant to be shared)
+.claude/
+
+# OS junk
+.DS_Store
+Thumbs.db

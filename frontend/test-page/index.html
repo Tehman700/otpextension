@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>OTP Extension — scratch test page</title>
+    <style>
+      body { font-family: sans-serif; max-width: 480px; margin: 60px auto; }
+      section { margin-bottom: 48px; padding: 20px; border: 1px solid #ccc; border-radius: 8px; }
+      h2 { font-size: 15px; }
+      input.single { font-size: 18px; padding: 8px; width: 200px; }
+      .segmented { display: flex; gap: 8px; }
+      .segmented input { width: 36px; height: 44px; font-size: 20px; text-align: center; }
+    </style>
+  </head>
+  <body>
+    <h1>OTP Extension test page</h1>
+
+    <section>
+      <h2>1. Single input (autocomplete="one-time-code")</h2>
+      <input class="single" type="text" autocomplete="one-time-code" inputmode="numeric" placeholder="Enter code" />
+    </section>
+
+    <section>
+      <h2>2. Single input (keyword-matched, no autocomplete attr)</h2>
+      <input class="single" type="text" name="verification_code" placeholder="Verification code" />
+    </section>
+
+    <section>
+      <h2>3. Segmented 6-box input</h2>
+      <div class="segmented">
+        <input maxlength="1" inputmode="numeric" />
+        <input maxlength="1" inputmode="numeric" />
+        <input maxlength="1" inputmode="numeric" />
+        <input maxlength="1" inputmode="numeric" />
+        <input maxlength="1" inputmode="numeric" />
+        <input maxlength="1" inputmode="numeric" />
+      </div>
+    </section>
+  </body>
+</html>
