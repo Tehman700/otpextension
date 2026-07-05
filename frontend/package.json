@@ -1,5 +1,5 @@
 {
-  "name": "otp-extension",
+  "name": "codecatch",
   "description": "Automatically detects and fills one-time verification codes from Gmail into web forms.",
   "private": true,
   "version": "1.0.0",

@@ -83,7 +83,7 @@ function render(): void {
   app.innerHTML = `
     <header class="popup-header">
       <div class="orb" aria-hidden="true"></div>
-      <h1 class="brand-title">OTP Extension</h1>
+      <h1 class="brand-title">CodeCatch</h1>
     </header>
 
     <section class="panel">

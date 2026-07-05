@@ -1,12 +1,12 @@
 ---
-title: OTP Extension — Privacy Policy
+title: CodeCatch — Privacy Policy
 ---
 
-# Privacy Policy — OTP Extension
+# Privacy Policy — CodeCatch
 
-**Last updated:** July 4, 2026
+**Last updated:** July 5, 2026
 
-OTP Extension ("the extension") helps you sign in and verify accounts faster by detecting one-time verification codes in your Gmail inbox and filling them into the web page you're on.
+CodeCatch ("the extension") helps you sign in and verify accounts faster by detecting one-time verification codes in your Gmail inbox and filling them into the web page you're on.
 
 ## What data we access
 
@@ -37,7 +37,7 @@ You can disconnect your Gmail account at any time from the extension's popup —
 
 ## Compliance
 
-OTP Extension's use and transfer of information received from Google APIs adheres to the [Google API Services User Data Policy](https://developers.google.com/terms/api-services-user-data-policy), including the Limited Use requirements.
+CodeCatch's use and transfer of information received from Google APIs adheres to the [Google API Services User Data Policy](https://developers.google.com/terms/api-services-user-data-policy), including the Limited Use requirements.
 
 ## Contact
 

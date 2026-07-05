@@ -19,7 +19,7 @@ const extensionPublicKey =
 // See https://wxt.dev/api/config.html
 export default defineConfig({
   manifest: {
-    name: 'OTP Extension',
+    name: 'CodeCatch',
     description:
       'Automatically detects and fills one-time verification codes from Gmail into web forms.',
     key: extensionPublicKey,
