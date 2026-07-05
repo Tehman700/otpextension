@@ -1,3 +1,8 @@
+import '@fontsource/inter/latin-400.css';
+import '@fontsource/inter/latin-500.css';
+import '@fontsource/inter/latin-600.css';
+import '@fontsource/inter/latin-700.css';
+import '@fontsource/eb-garamond/latin-400.css';
 import './style.css';
 import { copyToClipboard } from '@/lib/clipboard';
 import { sendRuntimeMessage } from '@/lib/messaging';
@@ -28,28 +33,28 @@ async function withBusy(action: () => Promise<void>): Promise<void> {
   await refresh();
 }
 
-function connectionStatusLine(state: PopupState): string {
+function renderStatusBadge(state: PopupState): string {
   switch (state.connection.status) {
     case 'connected':
-      return `<span class="status-dot connected"></span>Connected as ${escapeHtml(state.connection.email)}`;
+      return `<span class="badge-pill"><span class="status-dot connected"></span>Connected</span>`;
     case 'reconnect_required':
-      return `<span class="status-dot reconnect"></span>Reconnect required`;
+      return `<span class="badge-pill"><span class="status-dot reconnect"></span>Reconnect required</span>`;
     default:
-      return `<span class="status-dot disconnected"></span>Not connected`;
+      return `<span class="badge-pill"><span class="status-dot"></span>Not connected</span>`;
   }
 }
 
 function renderLastCode(state: PopupState): string {
   const last = state.lastDetectedCode;
-  if (!last) return '<p class="muted">No code detected yet.</p>';
+  if (!last) return '<p class="empty-state">No code detected yet.</p>';
   const ago = Math.max(0, Math.round((Date.now() - last.detectedAt) / 1000));
   return `
     <div class="code-card">
-      <div class="row">
+      <div class="row-between">
         <span class="code-value">${escapeHtml(last.code)}</span>
-        <button id="copy-last" type="button">Copy</button>
+        <button id="copy-last" class="btn btn-outline btn-sm" type="button">Copy</button>
       </div>
-      <span class="muted">${escapeHtml(last.subject || last.sender)} · ${ago}s ago</span>
+      <span class="code-meta">${escapeHtml(last.subject || last.sender)} · ${ago}s ago</span>
     </div>
   `;
 }
@@ -57,15 +62,18 @@ function renderLastCode(state: PopupState): string {
 function renderPrefsToggle(id: keyof Prefs, label: string, prefs: Prefs): string {
   return `
     <label class="toggle-row" for="${id}">
-      <span>${label}</span>
-      <input type="checkbox" id="${id}" ${prefs[id] ? 'checked' : ''} />
+      <span class="toggle-label">${label}</span>
+      <span class="switch">
+        <input type="checkbox" id="${id}" ${prefs[id] ? 'checked' : ''} />
+        <span class="switch-track"></span>
+      </span>
     </label>
   `;
 }
 
 function render(): void {
   if (!state) {
-    app.innerHTML = '<p class="muted">Loading…</p>';
+    app.innerHTML = '<p class="empty-state">Loading…</p>';
     return;
   }
 
@@ -73,37 +81,40 @@ function render(): void {
   const needsReconnect = state.connection.status === 'reconnect_required';
 
   app.innerHTML = `
-    <h1>OTP Extension</h1>
+    <header class="popup-header">
+      <div class="orb" aria-hidden="true"></div>
+      <h1 class="brand-title">OTP Extension</h1>
+    </header>
 
-    <div class="section">
-      <div class="row status-line">${connectionStatusLine(state)}</div>
-      ${error ? `<div class="error">${escapeHtml(error)}</div>` : ''}
-      <div class="row">
-        ${
-          connected
-            ? `<button id="disconnect" type="button" ${busy ? 'disabled' : ''}>Disconnect</button>`
-            : `<button id="connect" class="primary" type="button" ${busy ? 'disabled' : ''}>${needsReconnect ? 'Reconnect Gmail' : 'Connect Gmail'}</button>`
-        }
-      </div>
-    </div>
+    <section class="panel">
+      <div class="row-between">${renderStatusBadge(state)}</div>
+      ${state.connection.status === 'connected' ? `<span class="code-meta">${escapeHtml(state.connection.email)}</span>` : ''}
+      ${error ? `<p class="error-text">${escapeHtml(error)}</p>` : ''}
+      ${
+        connected
+          ? `<button id="disconnect" class="btn btn-outline btn-block" type="button" ${busy ? 'disabled' : ''}>Disconnect</button>`
+          : `<button id="connect" class="btn btn-primary btn-block" type="button" ${busy ? 'disabled' : ''}>${needsReconnect ? 'Reconnect Gmail' : 'Connect Gmail'}</button>`
+      }
+    </section>
 
-    <div class="section">
-      <div class="row">
-        <strong style="font-size:13px">Last detected code</strong>
-        <button id="check-now" type="button" ${busy || !connected ? 'disabled' : ''}>Check now</button>
+    <section class="panel">
+      <div class="row-between">
+        <span class="eyebrow">Last detected code</span>
+        <button id="check-now" class="btn btn-outline btn-sm" type="button" ${busy || !connected ? 'disabled' : ''}>Check now</button>
       </div>
       ${renderLastCode(state)}
-    </div>
+    </section>
 
-    <div class="section">
-      ${renderPrefsToggle('autoFill', 'Auto-fill code into page', state.prefs)}
-      ${renderPrefsToggle('autoCopy', 'Auto-copy to clipboard', state.prefs)}
-      ${renderPrefsToggle('notificationsEnabled', 'Show notifications', state.prefs)}
-    </div>
+    <section class="panel">
+      <span class="eyebrow">Settings</span>
+      <div class="toggle-list">
+        ${renderPrefsToggle('autoFill', 'Auto-fill code into page', state.prefs)}
+        ${renderPrefsToggle('autoCopy', 'Auto-copy to clipboard', state.prefs)}
+        ${renderPrefsToggle('notificationsEnabled', 'Show notifications', state.prefs)}
+      </div>
+    </section>
 
-    <footer>
-      <span>Your Gmail data never leaves your browser.</span>
-    </footer>
+    <footer class="popup-footer">Your Gmail data never leaves your browser.</footer>
   `;
 
   attachListeners();

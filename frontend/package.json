@@ -20,5 +20,9 @@
     "typescript": "^5.9.3",
     "vitest": "^3.0.0",
     "wxt": "^0.20.27"
+  },
+  "dependencies": {
+    "@fontsource/eb-garamond": "^5.2.7",
+    "@fontsource/inter": "^5.2.8"
   }
 }
