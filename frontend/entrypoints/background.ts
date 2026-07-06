@@ -7,6 +7,7 @@ import {
   listRecentMessageIds,
   syncHistory,
 } from '@/lib/gmail-client';
+import { domainsMatch } from '@/lib/domain-match';
 import { BURST_PORT_NAME, type BurstClientMessage, type BurstServerMessage, type RuntimeRequest, type RuntimeResponse } from '@/lib/messaging';
 import { CONFIDENT_THRESHOLD, POSSIBLE_THRESHOLD, bestCandidate, extractOtpCandidates } from '@/lib/otp-extractor';
 import { storage } from '@/lib/storage';
@@ -246,7 +247,15 @@ async function runSyncPassWithToken(token: string, options: SyncPassOptions): Pr
     await storage.setStartHistoryId(sync.newHistoryId);
   }
 
+  // When several new messages each produce a candidate (e.g. an unrelated code
+  // from a different service happens to land around the same time), a message
+  // whose sender domain matches the current site categorically outranks one
+  // that doesn't — regardless of raw text confidence — so an unrelated code
+  // never wins over the one actually sent by the site the user is on. This
+  // only applies when we have page context (burst mode); coarse-mode checks
+  // (no specific site in play) fall back to plain highest-confidence.
   let best: OtpCandidate | null = null;
+  let bestMatchesDomain = false;
 
   for (const id of newMessageIds) {
     if (await storage.hasProcessed(id)) continue;
@@ -262,7 +271,15 @@ async function runSyncPassWithToken(token: string, options: SyncPassOptions): Pr
       pageUrl: options.pageUrl,
     });
     const top = bestCandidate(candidates);
-    if (top && (!best || top.confidence > best.confidence)) {
+    if (!top) continue;
+
+    const matchesDomain = options.pageUrl ? domainsMatch(meta.from, options.pageUrl) : false;
+    const isBetter =
+      !best ||
+      (matchesDomain && !bestMatchesDomain) ||
+      (matchesDomain === bestMatchesDomain && top.confidence > best.confidence);
+
+    if (isBetter) {
       best = {
         code: top.code,
         confidence: top.confidence,
@@ -271,6 +288,7 @@ async function runSyncPassWithToken(token: string, options: SyncPassOptions): Pr
         messageId: id,
         receivedAt: meta.internalDate,
       };
+      bestMatchesDomain = matchesDomain;
     }
   }
 
