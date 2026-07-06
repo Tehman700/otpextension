@@ -1,7 +1,7 @@
 # CodeCatch — Project Handout
 
 > Purpose: complete context document for resuming work in a fresh conversation.
-> Last updated: **July 7, 2026** (during Google OAuth verification submission).
+> Last updated: **July 7, 2026** (fixing a Branding verification rejection: privacy policy URL was identical to home page URL).
 
 ---
 
@@ -40,7 +40,8 @@ Intended as a **real shippable product** (Chrome Web Store), free for v1, moneti
 | Google Cloud project | `OTPVerificationExtensionV1` (slug `otpverificationextensionv1`) |
 | Google account (everything) | `tehmanhassan@gmail.com` — Cloud Console, Search Console, CWS publisher, support email, test user |
 | Custom domain | **codecatch.site** (Namecheap, bought 2026-07-06, expires 2027-07-06, WithheldForPrivacy on) |
-| Privacy policy / home page URL | `https://codecatch.site/` (GitHub Pages behind custom domain) |
+| Home page URL | `https://codecatch.site/` (GitHub Pages behind custom domain, `docs/index.md`) |
+| Privacy policy URL | `https://codecatch.site/privacy/` (`docs/privacy.md`) — **must differ from home page URL** or Google's Branding verification rejects it |
 | GitHub repo | `https://github.com/Tehman700/otpextension.git`, branch `main` |
 | GitHub Pages source | `main` branch, `/docs` folder + `docs/CNAME` containing `codecatch.site` |
 | Demo video (OAuth verification) | `https://youtu.be/-Ltp2txYQGM` ("CodeCatch Testing Video, Auto OTP Picker", unlisted) |
@@ -75,10 +76,11 @@ Repo root: `d:\OTP Extension` (git repo, remote `origin`, branch `main`).
 ```
 d:\OTP Extension\
   .gitignore                  — ignores .claude/
-  Design.md                   — design-system spec (ElevenLabs-inspired) the popup UI follows
-  handout.md                  — THIS file
+  handout.md                  — THIS file (design-system spec folded into §5; old
+                                standalone Design.md removed)
   docs/                       — GitHub Pages source (published at https://codecatch.site/)
-    index.md                  — privacy policy (the live/public copy)
+    index.md                  — home page (product blurb + link to /privacy/)
+    privacy.md                — privacy policy (the live/public copy), permalink /privacy/
     CNAME                     — "codecatch.site"
     google9647a3514365a96c.html — old Search Console URL-prefix token (obsolete, harmless)
   backend/                    — EMPTY, reserved for future
@@ -171,7 +173,7 @@ d:\OTP Extension\
 
 ## 5. Popup UI & design system
 
-- Spec: **`Design.md`** at repo root (ElevenLabs-inspired editorial system). Off-white canvas `#f5f5f5`, warm near-black ink `#0c0a09`/`#292524`, hairlines `#e7e5e4`, pill-shaped buttons (solid ink = primary, outline = secondary), hairline+soft-shadow white cards (`radius 16px`), pastel gradient-orb as decoration ONLY.
+- Spec (previously a standalone `Design.md`, now folded in here — ElevenLabs-inspired editorial system). Off-white canvas `#f5f5f5`, warm near-black ink `#0c0a09`/`#292524`, hairlines `#e7e5e4`, pill-shaped buttons (solid ink = primary, outline = secondary), hairline+soft-shadow white cards (`radius 16px`), pastel gradient-orb as decoration ONLY.
 - Fonts self-hosted via fontsource, **latin subsets only** (`@fontsource/inter/latin-{400,500,600,700}.css`, `@fontsource/eb-garamond/latin-400.css`). Note: **EB Garamond has no 300 weight** — spec's "Waldenburg Light 300" is approximated with EB Garamond 400 for the display face. Full-subset imports ballooned the build to 1.24 MB; latin-only brings it to ~307 kB. Don't reintroduce bare `@fontsource/x/400.css` imports.
 - Popup sections: header (serif "CodeCatch" + blurred mint/lavender orb), connection status pill badge + Connect/Reconnect (primary) or Disconnect (outline), "Last detected code" card (large code + Copy + "Check now"), three custom toggle switches (auto-fill / auto-copy / notifications), footer: "Your Gmail data never leaves your browser."
 - All popup logic in `main.ts` (plain TS, `render()` + `attachListeners()`, `escapeHtml` for anything user-derived).
@@ -204,25 +206,30 @@ node test-page/serve.cjs   # scratch test page → http://localhost:8080
 1. Extension fully working end-to-end, user-validated: OAuth connect, detection, multi-field autofill (single + segmented), clipboard, toast, popup auto-open, notifications.
 2. CWS developer account registered ($5), **non-trader** declared, draft item created, permanent ID reserved, updated zip (with key + CodeCatch name + redesigned popup) re-uploaded.
 3. Store listing partially filled: name/summary from package; **description drafted** (see §9); category should be **Productivity**, language **English**.
-4. Privacy policy live at `https://codecatch.site/`; domain verified in Search Console (Domain property, DNS TXT).
-5. OAuth consent screen (Google Auth Platform): branding fields set (name CodeCatch, logo, home/privacy = codecatch.site, authorized domain codecatch.site, contacts) — **branding verification passed** after the domain migration.
+4. Privacy policy live at `https://codecatch.site/privacy/` (moved off the site root — see §7 "In flight"); domain verified in Search Console (Domain property, DNS TXT).
+5. OAuth consent screen (Google Auth Platform): branding fields set (name CodeCatch, logo, authorized domain codecatch.site, contacts).
 6. Data Access: `gmail.readonly` scope added with justification text + demo video link.
 7. Verification questionnaire answered: personal-use **No**, internal **No**, dev/testing **No**, WordPress SMTP **No**; both acknowledgment checkboxes checked. "Additional info" text supplied stating **no backend server** (basis for avoiding paid CASA; the CASA checkbox is a blanket disclosure, actual requirement is determined by review — our no-server architecture should qualify for the standard free path).
 
 ### In flight / to confirm
-- **OAuth verification submission**: the questionnaire was filled in the last session; **confirm the final "Submit for verification"/Confirm button was actually clicked** and the Verification Center shows a pending/in-review state. Then it's a waiting game (days to weeks). Google may email `tehmanhassan@gmail.com` with follow-up questions — answer promptly, reiterate the no-server architecture if CASA comes up.
+- **OAuth verification submission confirmed**: Verification Center (`console.cloud.google.com/auth/verification`) shows "Your branding and data access are currently under review."
+- **Branding check FAILED on 2026-07-07**: "Privacy policy requirements" flagged red — *"Your privacy policy URL is the same as your home page URL."* Root cause: `docs/index.md` (site root) **was** the privacy policy itself. Fix applied this session: privacy policy moved to its own page, `docs/privacy.md` with `permalink: /privacy/` → publishes at `https://codecatch.site/privacy/`; `docs/index.md` rewritten as a short product home page linking to it.
+- **Remaining steps to close this out** (not yet done as of this edit):
+  1. Push the docs change and confirm `https://codecatch.site/` (home page) and `https://codecatch.site/privacy/` (policy) are both live and genuinely different pages (GitHub Pages rebuild takes a minute or two).
+  2. In Cloud Console → Branding → **App domain**: change "Application privacy policy link" from `https://codecatch.site/` to `https://codecatch.site/privacy/`; leave "Application home page" as `https://codecatch.site/`. Save.
+  3. The Verification Center told us to **reply to the Trust & Safety email thread** once issues are resolved — find that email in `tehmanhassan@gmail.com` and reply confirming the fix (don't just fix silently and wait).
 - Until verification approves: consent screen shows "unverified app" warning, 100-user cap (currently 1/100), only listed test users connect cleanly.
 
 ### Not done yet
 1. **CWS screenshots** (required, ≥1, 1280×800 or 640×400 PNG/JPEG): capture popup-with-code, on-page toast+autofill on the test page or a real flow. User must capture these (we have no screenshot access to their Chrome).
-2. **CWS Privacy practices tab**: single-purpose statement + per-permission justifications — all text ready in `frontend/docs/PERMISSION_JUSTIFICATIONS.md`; privacy policy URL `https://codecatch.site/`.
+2. **CWS Privacy practices tab**: single-purpose statement + per-permission justifications — all text ready in `frontend/docs/PERMISSION_JUSTIFICATIONS.md`; privacy policy URL `https://codecatch.site/privacy/`.
 3. **Submit CWS listing for review** — can be done in parallel with OAuth verification or after it approves (after is lower-risk of review friction).
 4. Optional pre-launch hardening: manual QA against real services (Google, Microsoft, GitHub, a segmented-input site), keyboard-event fallback for segmented libs that listen to keydown instead of input events.
 5. Consider updating popup footer / store listing to link the privacy policy.
 
 ### Ongoing obligations (post-launch)
 - Restricted-scope **annual reverification** by Google.
-- Keep `docs/index.md` (live policy) and `frontend/docs/PRIVACY_POLICY.md` (source copy) in sync; policy promises: no server, no selling data, session-only code storage, 24h de-dup pruning, disconnect = revoke.
+- Keep `docs/privacy.md` (live policy) and `frontend/docs/PRIVACY_POLICY.md` (source copy) in sync; policy promises: no server, no selling data, session-only code storage, 24h de-dup pruning, disconnect = revoke.
 - Namecheap domain renewal 2027-07-06 (~standard .site renewal pricing — check it).
 
 ---
@@ -278,6 +285,6 @@ Per-permission justifications: see `frontend/docs/PERMISSION_JUSTIFICATIONS.md` 
 
 1. Read this file.
 2. `cd "d:\OTP Extension" && git status && git log --oneline -5` — confirm clean tree and see latest work.
-3. Check with the user: **did OAuth verification get submitted, and has Google responded?** That gates most next steps.
+3. Check with the user: **has the Branding re-check passed yet** (Cloud Console → Verification Center)? As of 2026-07-07 it had failed once (privacy policy URL == home page URL, see §7) and the fix (splitting `docs/index.md` / `docs/privacy.md`) was just applied — confirm the Console form was updated and the Trust & Safety thread replied to.
 4. If continuing dev: `cd frontend && npm install && npm run dev`, load `.output/chrome-mv3-dev` unpacked, confirm ID is `fjfaaefhmkdiebabpgkdpplcbjmlpmag`.
-5. Next concrete deliverables, in priority order: (a) confirm verification submitted; (b) screenshots for CWS; (c) fill CWS privacy-practices tab from `PERMISSION_JUSTIFICATIONS.md`; (d) submit listing for review; (e) real-world QA pass.
+5. Next concrete deliverables, in priority order: (a) confirm Branding re-check passes and verification resumes; (b) screenshots for CWS; (c) fill CWS privacy-practices tab from `PERMISSION_JUSTIFICATIONS.md`; (d) submit listing for review; (e) real-world QA pass.
